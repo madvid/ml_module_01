@@ -88,7 +88,7 @@ class Metrics():
             return None
 
 
-class MyLinearRegression():
+class MyLinearRegression(Metrics):
     """ Homemade linear regression class to fit like a tiny boss-ish
     """
     CLS_loss_fct = Metrics.mse_
@@ -189,7 +189,7 @@ class MyLinearRegression():
                     or (x.shape[0] != y.shape[0]) \
                         or (self.thetas.shape[0] != x.shape[1] + 1):
                 return None
-            
+            ## Performing the gradient descent    
             for _ in range(self.max_iter):
                 grad = self._gradient_(x, y)
                 self.thetas = self.thetas - self.alpha * grad
