@@ -23,21 +23,21 @@ def gradient(x, y, theta):
     Raises:
         This function should not raise any Exception.
     """
-    #try:
-    # Testing the type of the parameters, numpy array expected.
-    if (not isinstance(x, np.ndarray)) \
-        or (not isinstance(y, np.ndarray)) \
-            or (not isinstance(theta, np.ndarray)):
-                return None
-    
-    # Testing the shape of the paramters.
-    if (x.shape[1] != 1) or (y.shape[1] != 1) or (theta.shape[1] != 1) or (x.shape[0] != y.shape[0]):
+    try:
+        # Testing the type of the parameters, numpy array expected.
+        if (not isinstance(x, np.ndarray)) \
+            or (not isinstance(y, np.ndarray)) \
+                or (not isinstance(theta, np.ndarray)):
+                    return None
+
+        # Testing the shape of the paramters.
+        if (x.shape[1] != 1) or (y.shape[1] != 1) or (theta.shape[1] != 1) or (x.shape[0] != y.shape[0]):
+            return None
+        m, grad = x.shape[0], np.zeros(theta.shape)
+
+        xp = np.hstack((np.ones((m,1)), x))
+        grad = xp.T @ (xp @ theta- y)
+
+        return grad / m
+    except:
         return None
-    m, grad = x.shape[0], np.zeros(theta.shape)
-    
-    xp = np.hstack(np.ones((m,1)), x)
-    grad = np.dot(xp.T, xp * theta - y)
-    
-    return grad / m
-    #except:
-    #    return None
