@@ -1,6 +1,5 @@
 import sys
 import os
-
 import numpy as np
 
 path = os.path.join(os.path.dirname(__file__), '..', 'utils')
@@ -9,8 +8,8 @@ from prediction import predict_
 
 
 def gradient(x, y, theta):
-    """Computes a gradient vector from three non-empty numpy.array, without any for-loop.
-    The three arrays must have compatible shapes.
+    """Computes a gradient vector from three non-empty numpy.array,
+    without any for-loop. The three arrays must have compatible shapes.
     Args:
         x: has to be an numpy.array, a vector of shape m * 1.
         y: has to be an numpy.array, a vector of shape m * 1.
@@ -28,15 +27,18 @@ def gradient(x, y, theta):
         if (not isinstance(x, np.ndarray)) \
             or (not isinstance(y, np.ndarray)) \
                 or (not isinstance(theta, np.ndarray)):
-                    return None
+            return None
 
         # Testing the shape of the paramters.
-        if (x.shape[1] != 1) or (y.shape[1] != 1) or (theta.shape[1] != 1) or (x.shape[0] != y.shape[0]):
+        if (x.shape[1] != 1) \
+            or (y.shape[1] != 1) \
+                or (theta.shape[1] != 1) \
+                or (x.shape[0] != y.shape[0]):
             return None
         m, grad = x.shape[0], np.zeros(theta.shape)
 
-        xp = np.hstack((np.ones((m,1)), x))
-        grad = xp.T @ (xp @ theta- y)
+        xp = np.hstack((np.ones((m, 1)), x))
+        grad = xp.T @ (xp @ theta - y)
 
         return grad / m
     except:

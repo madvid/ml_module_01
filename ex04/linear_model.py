@@ -15,61 +15,68 @@ from my_linear_regression import MyLinearRegression as MyLR
 from plot import plot
 from prediction import predict_
 
-def first_question(datafile = "are_blue_pills_magics.csv"):
-    #############################################################
+
+def first_question(datafile="are_blue_pills_magics.csv"):
+    # ######################################################### #
     # ____________________  FIRST PART  _______________________ #
-    #############################################################
+    # ######################################################### #
     # Read the CSV data file:
     try:
         data = pd.read_csv(datafile)
     except:
         print("An error occured during the reading of the dataset.")
         sys.exit()
-    
+
     # Checking the dataset:
     cols = data.columns
     if not all([c in ["Patient", "Micrograms", "Score"] for c in cols]):
         print("Unexpected column in the dataset.")
         sys.exit()
-    
+
     try:
         # Definition of x and y:
-        x = data.Micrograms.values.reshape(-1,1)
-        y = data.Score.values.reshape(-1,1)
-        
+        x = data.Micrograms.values.reshape(-1, 1)
+        y = data.Score.values.reshape(-1, 1)
+
         # Model and training
-        thetas = np.random.rand(2,1)
+        thetas = np.random.rand(2, 1)
         mylr = MyLR(thetas, alpha=5e-2, max_iter=1000)
         mylr.fit_(x, y)
         print("valeur de thetas avant training:\n", thetas)
         print("\nvaleur de thetas apres training:\n", mylr.thetas, "\n")
-        
+
         # Plot
-        plot(x, y, mylr.thetas, b_legend = True,
-             axes_labels=["Quantity of blue pill (in micrograms)", "Space driving score"],
-             data_labels={"raw":r"$S_{true}$(pills)", "prediction":r"$S_{predict}$(pills)"})
+        plot(x, y, mylr.thetas, b_legend=True,
+             axes_labels=["Quantity of blue pill (in micrograms)",
+                          "Space driving score"],
+             data_labels={"raw": r"$S_{true}$(pills)",
+                          "prediction": r"$S_{predict}$(pills)"})
         return x, y, mylr
     except:
         print("Something wrong happened during model instance or training.")
         sys.exit()
-        
+
+
 def second_question(x, y):
-    #############################################################
+    # ######################################################### #
     # ___________________  SECOND PART  _______________________ #
-    #############################################################
+    # ######################################################### #
     # Loss function vizualisation:
     n = 6
     theta0 = np.linspace(80, 96, n)
     theta1 = np.linspace(-14, -4, 100)
-    
+
     viridis = get_cmap('viridis', n)
-    fig, axe = plt.subplots(1,1, figsize = (15,10))
+    fig, axe = plt.subplots(1, 1, figsize=(15, 10))
     for t0, color in zip(theta0, viridis(range(n))):
         l_loss = []
         for t1 in theta1:
             ypred = predict_(x, np.array([[t0], [t1]]))
             l_loss.append(MyLR.loss_(y, ypred))
-        axe.plot(theta1, np.array(l_loss), label = r"J($\theta_0$ = " + f"{t0}," + r"$\theta_1$)", lw = 2.5, c=color)
+        axe.plot(theta1, np.array(l_loss),
+                 label=r"J($\theta_0$ = " + f"{t0}," + r"$\theta_1$)",
+                 lw=2.5,
+                 c=color)
     plt.grid()
     plt.legend()
     plt.xlabel(r"$\theta_1$")
@@ -79,23 +86,23 @@ def second_question(x, y):
 
 
 def third_question(x, y, mylr):
-    #############################################################
+    # ######################################################### #
     # ____________________  THIRD PART  _______________________ #
-    #############################################################
+    # ######################################################### #
     # MSE Calculation
-    ## Based on the graph in part 2, we choose for h: t0 = 89.6 and t1 = -9:
+    # Based on the graph in part 2, we choose for h: t0 = 89.6 and t1 = -9:
     graphical_choice_theta = np.array([[89.6], [-9]])
-    graph_mse = MyLR.mse_(predict_(x,graphical_choice_theta), y)
+    graph_mse = MyLR.mse_(predict_(x, graphical_choice_theta), y)
     print("value of mse with thetas choosen based on the graph: ", graph_mse)
 
     # MSE of the trained model:
     trained_mse = MyLR.mse_(predict_(x, mylr.thetas), y)
-    print("value of mse with thetas choosen based on the graph: ", trained_mse)
+    print("value of mse with thetas of the trained: ", trained_mse)
 
 
 if __name__ == '__main__':
     x, y, mylr = first_question()
-    
+
     second_question(x, y)
-    
+
     third_question(x, y, mylr)
