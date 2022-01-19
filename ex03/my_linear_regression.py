@@ -254,17 +254,17 @@ class MyLinearRegression(Metrics):
         Raises:
             This function should not raise any Exception.
         """
-        #try:
-        if not isinstance(x, (np.ndarray)):
+        try:
+            if not isinstance(x, (np.ndarray)):
+                return None
+            if x.ndim == 1:
+                x = x.reshape(-1,1)
+            if any([n == 0 for n in x.shape]):
+                return None
+            if self.thetas.shape != (x.shape[1] + 1, 1):
+                return None
+            xp = np.hstack((np.ones((x.shape[0], 1)), x))
+            ypred = xp @ self.thetas
+            return ypred
+        except:
             return None
-        if x.ndim == 1:
-            x = x.reshape(-1,1)
-        if any([n == 0 for n in x.shape]):
-            return None
-        if self.thetas.shape != (x.shape[1] + 1, 1):
-            return None
-        xp = np.hstack((np.ones((x.shape[0], 1)), x))
-        ypred = xp @ self.thetas
-        return ypred
-        #except:
-        #    return None

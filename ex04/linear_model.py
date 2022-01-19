@@ -15,13 +15,13 @@ from my_linear_regression import MyLinearRegression as MyLR
 from plot import plot
 from prediction import predict_
 
-if __name__ == '__main__':
+def first_question(datafile = "are_blue_pills_magics.csv"):
     #############################################################
     # ____________________  FIRST PART  _______________________ #
     #############################################################
     # Read the CSV data file:
     try:
-        data = pd.read_csv('are_blue_pills_magics.csv')
+        data = pd.read_csv(datafile)
     except:
         print("An error occured during the reading of the dataset.")
         sys.exit()
@@ -33,20 +33,27 @@ if __name__ == '__main__':
         sys.exit()
     
     try:
+        # Definition of x and y:
         x = data.Micrograms.values.reshape(-1,1)
         y = data.Score.values.reshape(-1,1)
+        
+        # Model and training
         thetas = np.random.rand(2,1)
         mylr = MyLR(thetas, alpha=5e-2, max_iter=1000)
         mylr.fit_(x, y)
-        print("valeur de thetas:", thetas)
-        print("valeur de self.thetas:", mylr.thetas)
+        print("valeur de thetas avant training:\n", thetas)
+        print("\nvaleur de thetas apres training:\n", mylr.thetas, "\n")
+        
+        # Plot
         plot(x, y, mylr.thetas, b_legend = True,
              axes_labels=["Quantity of blue pill (in micrograms)", "Space driving score"],
              data_labels={"raw":r"$S_{true}$(pills)", "prediction":r"$S_{predict}$(pills)"})
+        return x, y, mylr
     except:
         print("Something wrong happened during model instance or training.")
         sys.exit()
-
+        
+def second_question(x, y):
     #############################################################
     # ___________________  SECOND PART  _______________________ #
     #############################################################
@@ -70,6 +77,8 @@ if __name__ == '__main__':
     axe.set_ylim([10, 150])
     plt.show()
 
+
+def third_question(x, y, mylr):
     #############################################################
     # ____________________  THIRD PART  _______________________ #
     #############################################################
@@ -82,3 +91,11 @@ if __name__ == '__main__':
     # MSE of the trained model:
     trained_mse = MyLR.mse_(predict_(x, mylr.thetas), y)
     print("value of mse with thetas choosen based on the graph: ", trained_mse)
+
+
+if __name__ == '__main__':
+    x, y, mylr = first_question()
+    
+    second_question(x, y)
+    
+    third_question(x, y, mylr)
